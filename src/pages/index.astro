@@ -1,5 +1,8 @@
 ---
+import "../styles/global.css";
 
+const title = "Welcome to My Astro App";
+const description = "A modern web app built with Astro, Node.js, and Tailwind CSS";
 ---
 
 <html lang="en">
@@ -8,9 +11,74 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>{title}</title>
+		<meta name="description" content={description} />
 	</head>
-	<body>
-		<h1>Astro</h1>
+	<body class="bg-gray-50 min-h-screen">
+		<main class="container mx-auto px-4 py-16">
+			<div class="text-center max-w-3xl mx-auto">
+				<h1 class="text-6xl font-bold text-gray-900 mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+					{title}
+				</h1>
+				<p class="text-xl text-gray-600 mb-8">
+					{description}
+				</p>
+
+				<div class="grid md:grid-cols-3 gap-6 mt-12">
+					<div class="bg-white p-6 rounded-lg shadow-md">
+						<h3 class="text-lg font-semibold text-gray-900 mb-3">⚡ Fast</h3>
+						<p class="text-gray-600">Built with Astro for lightning-fast performance</p>
+					</div>
+					<div class="bg-white p-6 rounded-lg shadow-md">
+						<h3 class="text-lg font-semibold text-gray-900 mb-3">🎨 Styled</h3>
+						<p class="text-gray-600">Beautiful UI with Tailwind CSS</p>
+					</div>
+					<div class="bg-white p-6 rounded-lg shadow-md">
+						<h3 class="text-lg font-semibold text-gray-900 mb-3">🚀 SSR</h3>
+						<p class="text-gray-600">Server-side rendering with Node.js</p>
+					</div>
+				</div>
+
+				<div class="mt-12">
+					<button
+						id="api-test"
+						class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+					>
+						Test API
+					</button>
+					<div id="api-result" class="mt-4 p-4 bg-gray-100 rounded-lg hidden">
+						<p class="text-gray-700"></p>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<script>
+			document.getElementById('api-test')?.addEventListener('click', async () => {
+				const button = document.getElementById('api-test') as HTMLButtonElement;
+				const result = document.getElementById('api-result');
+
+				button.textContent = 'Loading...';
+				button.disabled = true;
+
+				try {
+					const response = await fetch('/api/hello');
+					const data = await response.json();
+
+					if (result) {
+						result.classList.remove('hidden');
+						result.querySelector('p')!.textContent = `API Response: ${data.message}`;
+					}
+				} catch (error) {
+					if (result) {
+						result.classList.remove('hidden');
+						result.querySelector('p')!.textContent = 'Error: Could not connect to API';
+					}
+				} finally {
+					button.textContent = 'Test API';
+					button.disabled = false;
+				}
+			});
+		</script>
 	</body>
 </html>
